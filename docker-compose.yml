@@ -1,0 +1,37 @@
+services:
+  sales-order-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sales-order-api
+    ports:
+      - "8080:8080"
+    environment:
+      - JWT_SECRET=${JWT_SECRET:-mySecretKeyForJWTTokenGenerationThatShouldBeAtLeast256BitsLong}
+      - JWT_EXPIRATION=${JWT_EXPIRATION:-86400000}
+    volumes:
+      - db-data:/data
+    networks:
+      - sales-order-network
+
+  h2-database:
+    image: oscarfonts/h2
+    container_name: h2-database
+    ports:
+      - "8082:8082"
+      - "9092:9092"
+    environment:
+      - H2_OPTIONS=-web -webAllowOthers -tcp -tcpAllowOthers
+    volumes:
+      - h2-data:/opt/h2-data
+    networks:
+      - sales-order-network
+
+volumes:
+  h2-data:
+  db-data:
+
+networks:
+  sales-order-network:
+    driver: bridge
+

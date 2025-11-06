@@ -1,0 +1,42 @@
+# Base/Default configuration
+# This file contains shared configuration used across all environments
+# Environment-specific overrides are in application-{profile}.yml files
+# 
+# When running with docker-compose up (without profile), this file is used
+# with file-based H2 database for Docker deployment
+
+server:
+  port: 8080
+
+spring:
+  application:
+    name: sales-order-api
+  datasource:
+    url: jdbc:h2:file:/data/ordersdb;MODE=PostgreSQL;AUTO_SERVER=TRUE;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+jwt:
+  secret: ${JWT_SECRET:mySecretKeyForJWTTokenGenerationThatShouldBeAtLeast256BitsLong}
+  expiration: ${JWT_EXPIRATION:86400000}
+
+app:
+  vat-rate: 0.15
+
+logging:
+  level:
+    root: INFO
+    com.example.salesorder: DEBUG

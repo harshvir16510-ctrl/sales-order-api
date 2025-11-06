@@ -1,0 +1,13 @@
+# Docker Compose for Development Environment
+# Usage: docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+services:
+  sales-order-api:
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - JWT_SECRET=${JWT_SECRET:-devSecretKeyForJWTTokenGenerationThatShouldBeAtLeast256BitsLongForDevelopment}
+      - JWT_EXPIRATION=${JWT_EXPIRATION:-86400000}
+    ports:
+      - "8080:8080"
+      - "5005:5005" # Debug port for remote debugging
+
